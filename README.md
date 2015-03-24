@@ -21,11 +21,16 @@ System Requirements
 Credits
 -------
 * Founder and Lead Projects: [Steeven Andrian Salim][7] - [steevenz.com][6]
+* Template Designer: [Teguh Rianto][10]
+* Wiki Writer: Aradea
+
+Sponsor
+-------
+[PT. YukBisnis Indonesia - yukbisnis.com][11]
  
 Special Thanks
 --------------
-* My Lovely Wife zHa,My Little Princess Angie, My Little Prince Neal - Thanks for all your supports, i love you all
-* Viktor Iwan Kristanda (PT. Doxadigital Indonesia)
+* Jaya Setiabudi (PT. Yuk Bisnis Indonesia)
 * Yudi Primaputra (PT. Yuk Bisnis Indonesia)
 
 [1]: http://circle-creative.com
@@ -37,3 +42,5 @@ Special Thanks
 [7]: http://cv.steevenz.com
 [8]: https://getcomposer.org
 [9]: https://packagist.org/packages/o2system/o2system
+[10]: http://teguhrianto22.pusku.com
+[11]: http://www.yukbisnis.com
