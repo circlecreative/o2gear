@@ -1,6 +1,11 @@
 {
   "name": "o2system/o2gears",
   "description": "PHP Developer Tools Library",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "version": "1.0.0",
+  "type": "php-libraries",
+  "keywords": ["utilities","php","framework","driver","libraries"],
   "authors": [
     {
       "name": "PT. Lingkar Kreasi (Circle Creative)",
@@ -41,8 +46,11 @@
     "php": ">=5.3.0"
   },
   "autoload": {
-    "psr-0": {
-      "__glob_autoload": "O2Gears"
-    }
+    "psr-4": {
+      "O2System\\O2Gears": "src"
+    },
+    "files": [
+      "src/helpers/gears_helper.php"
+    ]
   }
 }

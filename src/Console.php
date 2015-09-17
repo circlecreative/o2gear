@@ -1,8 +1,8 @@
 <?php
 /**
- * O2Gears
+ * O2System
  *
- * An open source PHP Developer tools for PHP 5.3 or newer
+ * An open source application development framework for PHP 5.4 or newer
  *
  * This content is released under the MIT License (MIT)
  *
@@ -18,40 +18,40 @@
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS ||
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * AUTHORS || COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES || OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT || OTHERWISE, ARISING FROM,
+ * OUT OF || IN CONNECTION WITH THE SOFTWARE || THE USE || OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package        O2Gears
+ * @package        O2System
  * @author         Steeven Andrian Salim
- * @copyright      Copyright (c) 2015, PT. Lingkar Kreasi (Circle Creative).
- *
- * @license        http://circle-creative.com/products/o2gears/license.html
- * @license        http://opensource.org/licenses/MIT	MIT License
- *
- * @link           http://circle-creative.com/products/o2gears.html
- *                 http://o2system.center/standalone/o2gears.html
- *
+ * @copyright      Copyright (c) 2005 - 2014, PT. Lingkar Kreasi (Circle Creative).
+ * @license        http://circle-creative.com/products/o2system/license.html
+ * @license        http://opensource.org/licenses/MIT   MIT License
+ * @link           http://circle-creative.com
+ * @since          Version 2.0
  * @filesource
  */
+
 // ------------------------------------------------------------------------
 
-namespace O2Gears;
-defined( 'GEAR_PATH' ) OR exit( 'No direct script access allowed' );
+namespace O2System\O2Gears;
+
+// ------------------------------------------------------------------------
 
 /**
  * Console Class
  *
  * This class is to gear up PHP Developer to send output to browser console
  *
- * @package        O2Gears
- * @category       Drivers
- * @author         Steeven Andrian Salim
- * @link           http://o2system.center/standalone/o2gears/user-guide/console.html
+ * @package        O2System
+ * @subpackage     core/gears
+ * @category       core class
+ * @author         Circle Creative Dev Team
+ * @link           http://o2system.center/wiki/#GearsConsole
  */
 class Console
 {
@@ -59,98 +59,50 @@ class Console
      * Constants of Console Types
      *
      * @access  public
-     * @var     integer
+     * @type     integer
      */
-    const LOG = 1;
-    const INFO = 2;
+    const LOG     = 1;
+    const INFO    = 2;
     const WARNING = 3;
-    const ERROR = 4;
+    const ERROR   = 4;
+
+    // ------------------------------------------------------------------------
 
     /**
-     * Log Method
+     * Log
      *
      * Send output to browser log console
      *
-     * @access           public
-     * @param   $title   String of output title
-     *          $vars    Mixed type variables of data
-     * @return           void
+     * @access  public
+     * @static  static class method
+     *
+     * @param   string $title string of output title
+     * @param   mixed  $vars  mixed type variables of data
      */
     public static function log( $title, $vars )
     {
         static::debug( static::LOG, $title, $vars );
     }
-
     // ------------------------------------------------------------------------
 
     /**
-     * Info Method
+     * Debug
      *
-     * Send output to browser info console
+     * Send output to browser debug console
      *
-     * @access           public
-     * @param   $title   String of output title
-     *          $vars    Mixed type variables of data
-     * @return           void
-     */
-    public static function info( $title, $vars )
-    {
-        static::debug( static::INFO, $title, $vars );
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Warning Method
+     * @access  public
+     * @static  static class method
      *
-     * Send output to browser warning console
-     *
-     * @access           public
-     * @param   $title   String of output title
-     *          $vars    Mixed type variables of data
-     * @return           void
-     */
-    public static function warning( $title, $vars )
-    {
-        static::debug( static::WARNING, $title, $vars );
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Log Method
-     *
-     * Send output to browser error console
-     *
-     * @access           public
-     * @param   $title   String of output title
-     *          $vars    Mixed type variables of data
-     * @return           void
-     */
-    public static function error( $title, $vars )
-    {
-        static::debug( static::ERROR, $title, $vars );
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Debug Method
-     *
-     * Send output to browser console log
-     *
-     * @access           public
-     * @param   $type    Integer type of console output
-     *          $title   String of output title
-     *          $vars    Mixed type variables of data
-     * @return           void
+     * @param   int    $type  console type
+     * @param   string $title string of output title
+     * @param   mixed  $vars  mixed type variables of data
      */
     public static function debug( $type, $title, $vars )
     {
         $vars = Printer::prepare_data( $vars );
 
         echo '<script type="text/javascript">' . PHP_EOL;
-        switch ( $type )
+        switch( $type )
         {
             default:
             case 1:
@@ -167,9 +119,9 @@ class Console
                 break;
         }
 
-        if ( ! empty( $vars ) )
+        if( ! empty( $vars ) )
         {
-            if ( is_object( $vars ) || is_array( $vars ) )
+            if( is_object( $vars ) || is_array( $vars ) )
             {
                 $object = json_encode( $vars );
                 echo 'var object' . preg_replace( '~[^A-Z|0-9]~i', "_", $title ) . ' = \'' . str_replace( "'", "\'",
@@ -177,7 +129,7 @@ class Console
                 echo 'var val' . preg_replace( '~[^A-Z|0-9]~i', "_",
                                                $title ) . ' = eval("(" + object' . preg_replace( '~[^A-Z|0-9]~i', "_",
                                                                                                  $title ) . ' + ")" );' . PHP_EOL;
-                switch ( $type )
+                switch( $type )
                 {
                     default:
                     case 1:
@@ -196,7 +148,7 @@ class Console
             }
             else
             {
-                switch ( $type )
+                switch( $type )
                 {
                     default:
                     case 1:
@@ -216,7 +168,55 @@ class Console
         }
         echo '</script>' . PHP_EOL;
     }
-}
+    // ------------------------------------------------------------------------
 
-/* End of file Console.php */
-/* Location: ./O2Gears/drivers/Console.php */
+    /**
+     * Info
+     *
+     * Send output to browser info console
+     *
+     * @access  public
+     * @static  static class method
+     *
+     * @param   string $title string of output title
+     * @param   mixed  $vars  mixed type variables of data
+     */
+    public static function info( $title, $vars )
+    {
+        static::debug( static::INFO, $title, $vars );
+    }
+    // ------------------------------------------------------------------------
+
+    /**
+     * Warning
+     *
+     * Send output to browser warning console
+     *
+     * @access  public
+     * @static  static class method
+     *
+     * @param   string $title string of output title
+     * @param   mixed  $vars  mixed type variables of data
+     */
+    public static function warning( $title, $vars )
+    {
+        static::debug( static::WARNING, $title, $vars );
+    }
+    // ------------------------------------------------------------------------
+
+    /**
+     * Error
+     *
+     * Send output to browser error console
+     *
+     * @access  public
+     * @static  static class method
+     *
+     * @param   string $title string of output title
+     * @param   mixed  $vars  mixed type variables of data
+     */
+    public static function error( $title, $vars )
+    {
+        static::debug( static::ERROR, $title, $vars );
+    }
+}

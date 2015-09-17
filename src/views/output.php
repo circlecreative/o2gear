@@ -5,14 +5,14 @@
     </title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="<?php echo $asset_url; ?>packages/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
     <!-- Bootstrap Optional theme -->
-    <link rel="stylesheet" href="<?php echo $asset_url; ?>packages/bootstrap/themes/default/default.min.css">
-    <link rel="stylesheet" href="<?php echo $asset_url; ?>packages/pretiffy/pretiffy.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
 
     <!-- Font Icon CSS -->
-    <link rel="stylesheet" href="<?php echo $asset_url; ?>fonts/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
     <style type="text/css">
 
@@ -57,13 +57,13 @@
 </body>
 
 <!-- Include jQuery -->
-<script type="text/javascript" src="<?php echo $asset_url; ?>js/jquery.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <!-- Include Prettify JS -->
-<script type="text/javascript" src="<?php echo $asset_url; ?>packages/pretiffy/pretiffy.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
 
 <!-- Include Bootstrap -->
-<script src="<?php echo $asset_url; ?>packages/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 <!-- Initialise jQuery Syntax Highlighter -->
 <script type="text/javascript">
