@@ -47,7 +47,7 @@
   },
   "autoload": {
     "psr-4": {
-      "O2System\\O2Gears": "src"
+      "O2System\\O2Gears\\": "src"
     },
     "files": [
       "src/helpers/gears_helper.php"
