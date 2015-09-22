@@ -79,7 +79,11 @@ class Logger
      *
      * @type array
      */
-    protected static $_config = array();
+    protected static $_config = array(
+        'path' => NULL,
+        'threshold' => Logger::ALL,
+        'date.format' => 'Y-m-d H:i:s'
+    );
 
     /**
      * List of logging levels
@@ -99,6 +103,30 @@ class Logger
         8 => 'CRITICAL',
         9 => 'ALL'
     );
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Class Initialize
+     *
+     * @throws \Exception
+     */
+    public function __construct( array $config = array() )
+    {
+        static::$_config = array_merge(static::$_config, $config);
+
+        if( ! is_dir( static::$_config[ 'path' ] ) )
+        {
+            if( ! mkdir( static::$_config[ 'path' ], 0775, TRUE ) )
+            {
+                throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not a directory, doesn't exist or cannot be created." );
+            }
+        }
+        elseif( ! is_writable( static::$_config[ 'path' ] ) )
+        {
+            throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not writable by the PHP process." );
+        }
+    }
 
     // --------------------------------------------------------------------
 
@@ -126,11 +154,6 @@ class Logger
      */
     public static function write( $level, $message )
     {
-        if( empty ( static::$_config ) )
-        {
-            static::__reconstruct();
-        }
-
         if( static::$_config[ 'threshold' ] == 0 )
         {
             return FALSE;
@@ -160,7 +183,7 @@ class Logger
             $level = strtoupper( $level );
         }
 
-        $filepath = static::$_config[ 'path' ] . DIRECTORY_SEPARATOR . 'log-' . date( 'd-m-Y' ) . '.log';
+        $filepath = static::$_config[ 'path' ] . 'log-' . date( 'd-m-Y' ) . '.log';
         $log = '';
 
         if( ! file_exists( $filepath ) )
@@ -173,8 +196,7 @@ class Logger
             return FALSE;
         }
 
-        $request = is_cli() ? 'CLI' : $_SERVER[ 'REQUEST_URI' ];
-        $log .= $request . ' -- ' . $level . ' - ' . date( 'r' ) . ' --> ' . $message . "\n";
+        $log .= $level . ' - ' . date( 'r' ) . ' --> ' . $message . "\n";
 
         flock( $fp, LOCK_EX );
 
@@ -191,36 +213,10 @@ class Logger
 
         if( isset( $newfile ) && $newfile === TRUE )
         {
-            chmod( $filepath, Config::permissions( 'file' ) );
+            chmod( $filepath, 0664 );
         }
 
         return is_int( $result );
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Class Initialize
-     *
-     * @throws \Exception
-     */
-    public static function __reconstruct()
-    {
-        static::$_config = Config::log();
-
-        static::$_config[ 'path' ] = Config::cache( 'path' ) . static::$_config[ 'path' ];
-
-        if( ! is_dir( static::$_config[ 'path' ] ) )
-        {
-            if( ! mkdir( static::$_config[ 'path' ], Config::permissions( 'folder' ), TRUE ) )
-            {
-                throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not a directory, doesn't exist or cannot be created." );
-            }
-        }
-        elseif( ! is_writable( static::$_config[ 'path' ] ) )
-        {
-            throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not writable by the PHP process." );
-        }
     }
 
     // --------------------------------------------------------------------
@@ -328,6 +324,3 @@ class Logger
         return static::write( Logger::CRITICAL, $message );
     }
 }
-
-/* End of file Logger.php */
-/* Location: ./o2system/core/gears/Logger.php */
