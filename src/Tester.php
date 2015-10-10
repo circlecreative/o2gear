@@ -423,6 +423,3 @@ function is_false( $test )
 {
     return ( $test === FALSE );
 }
-
-/* End of file Tester.php */
-/* Location: ./o2system/core/gears/Tester.php */

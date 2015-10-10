@@ -38,7 +38,7 @@
 
 // ------------------------------------------------------------------------
 
-namespace O2System\O2Gears;
+namespace O2System\Gears;
 
 // ------------------------------------------------------------------------
 
@@ -56,6 +56,8 @@ namespace O2System\O2Gears;
  */
 class Benchmark
 {
+    protected $_start_time;
+    protected $_start_memory;
     /**
      * List of all benchmark markers
      *
@@ -74,6 +76,24 @@ class Benchmark
 
     // ------------------------------------------------------------------------
 
+    public function __construct()
+    {
+        /*
+         *--------------------------------------------------------------
+         * Define the start time of the application, used for profiling.
+         *--------------------------------------------------------------
+         */
+        $this->_start_time = microtime( TRUE );
+
+
+        /*
+         *-----------------------------------------------------------------------------
+         * Define the memory usage at the start of the application, used for profiling.
+         *-----------------------------------------------------------------------------
+         */
+        $this->_start_memory = memory_get_usage( TRUE );
+    }
+
     /**
      * Start
      * Benchmark start timer marker
@@ -84,9 +104,9 @@ class Benchmark
      *
      * @param    string $marker marker name
      */
-    public function start( $marker = 'total_execution' )
+    public function start( $marker = 'total.execution' )
     {
-        $this->_marker[ $marker ] = array( 'time' => SYSTEM_START_TIME, 'memory' => SYSTEM_START_MEMORY );
+        $this->_marker[ $marker ] = array( 'time' => $this->_start_time, 'memory' => $this->_start_memory );
     }
     // ------------------------------------------------------------------------
 
@@ -104,7 +124,7 @@ class Benchmark
      *
      * @return    int   time of elapsed time
      */
-    public function elapsed_time( $marker = 'total_execution' )
+    public function elapsed_time( $marker = 'total.execution' )
     {
         if( empty( $this->_elapsed[ $marker ] ) )
         {
@@ -126,7 +146,7 @@ class Benchmark
      * @param   string  $marker   marker name
      * @param   int     $decimals time number format decimals
      */
-    public function stop( $marker = 'total_execution', $decimals = 4 )
+    public function stop( $marker = 'total.execution', $decimals = 4 )
     {
         $this->_elapsed[ $marker ] = array(
             'time'   => number_format( ( time() + microtime( TRUE ) ) - $this->_marker[ $marker ][ 'time' ],
@@ -148,7 +168,7 @@ class Benchmark
      *
      * @return  string  memory usage in MB
      */
-    public function memory_usage( $marker = 'total_execution' )
+    public function memory_usage( $marker = 'total.execution' )
     {
         if( empty( $this->_elapsed[ $marker ] ) )
         {

@@ -38,9 +38,8 @@
 
 // ------------------------------------------------------------------------
 
-namespace O2System\O2Gears;
+namespace O2System\Gears;
 {
-    defined( 'BASEPATH' ) || exit( 'No direct script access allowed' );
 
     /**
      * Tracer Class
@@ -96,17 +95,23 @@ namespace O2System\O2Gears;
          *
          * @access public
          *
-         * @param string $option tracer option
+         * @param string $flag tracer option
          */
-        public function __construct( $option = Tracer::IGNORE_ARGS )
+        public function __construct( $trace = array(), $flag = Tracer::PROVIDE_OBJECT )
         {
             $this->_benchmark = array(
                 'time'   => time() + microtime(),
                 'memory' => memory_get_usage()
             );
 
-            $this->_trace = debug_backtrace( $option );
-            array_shift( $this->_trace );
+            if( ! empty( $trace ) )
+            {
+                $this->_trace = $trace;
+            }
+            else
+            {
+                $this->_trace = debug_backtrace( $flag );
+            }
 
             // reverse array to make steps line up chronologically
             $this->_trace = array_reverse( $this->_trace );
@@ -129,6 +134,13 @@ namespace O2System\O2Gears;
         {
             foreach( $this->_trace as $trace )
             {
+                if( in_array( $trace[ 'function' ], [ 'error_handler', 'shutdown_handler' ] ) OR
+                    ( isset( $trace[ 'class' ] ) AND $trace[ 'class' ] === 'O2System\Gears\Tracer' )
+                )
+                {
+                    continue;
+                }
+
                 $line = new Tracer\Chronology();
 
                 if( isset( $trace[ 'class' ] ) && isset( $trace[ 'type' ] ) )
@@ -142,7 +154,7 @@ namespace O2System\O2Gears;
                     $line->type = 'non-static';
                 }
 
-                if( ! empty( $trace[ 'args' ] ) ) $line->args = $trace[ 'args' ];
+                if( ! empty( $trace[ 'args' ] ) AND $line->call !== 'print_out()' ) $line->args = $trace[ 'args' ];
 
                 if( ! isset( $trace[ 'file' ] ) )
                 {
@@ -161,7 +173,7 @@ namespace O2System\O2Gears;
 
                 $this->_chronology[ ] = $line;
 
-                if( $trace[ 'function' ] === 'print_out' ) break;
+                if( in_array( $trace[ 'function' ], [ 'print_out', 'print_line' ] ) ) break;
             }
         }
 
@@ -192,7 +204,7 @@ namespace O2System\O2Gears;
     }
 }
 
-namespace O2System\O2Gears;
+namespace O2System\Gears\Tracer;
 {
     /**
      * Chronology
@@ -205,9 +217,11 @@ namespace O2System\O2Gears;
      */
     class Chronology
     {
-
+        public $call;
+        public $type;
+        public $line;
+        public $time;
+        public $memory;
+        public $args;
     }
 }
-
-/* End of file Tracer.php */
-/* Location: ./o2system/core/gears/Tracer.php */

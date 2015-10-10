@@ -38,7 +38,7 @@
 
 // ------------------------------------------------------------------------
 
-namespace O2System\O2Gears;
+namespace O2System\Gears;
 
 // ------------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ class Logger
     protected static $_config = array(
         'path' => NULL,
         'threshold' => Logger::ALL,
-        'date.format' => 'Y-m-d H:i:s'
+        'date_format' => 'Y-m-d H:i:s'
     );
 
     /**
@@ -143,6 +143,109 @@ class Logger
     }
 
     // --------------------------------------------------------------------
+
+    /**
+     * Runtime errors that do not require immediate action but should typically
+     * be logged and monitored.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function error( $message )
+    {
+        return static::write( Logger::ERROR, $message );
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Detailed debug information.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function debug( $message )
+    {
+        return static::write( Logger::DEBUG, $message );
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Normal but significant events.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function notice( $message )
+    {
+        return static::write( Logger::NOTICE, $message );
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Exceptional occurrences that are not errors.
+     *
+     * Example: Use of deprecated APIs, poor use of an API, undesirable things
+     * that are not necessarily wrong.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function warning( $message )
+    {
+        return static::write( Logger::WARNING, $message );
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Action must be taken immediately.
+     *
+     * Example: Entire website down, database unavailable, etc. This should
+     * trigger the SMS alerts and wake you up.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function alert( $message )
+    {
+        return static::write( Logger::ALERT, $message );
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * System is unusable.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function emergency( $message )
+    {
+        return static::write( Logger::EMERGENCY, $message );
+    }
+
+    /**
+     * Critical conditions.
+     *
+     * Example: Application component unavailable, unexpected exception.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function critical( $message )
+    {
+        return static::write( Logger::CRITICAL, $message );
+    }
 
     /**
      * Write logs with an arbitrary level.
@@ -220,107 +323,4 @@ class Logger
     }
 
     // --------------------------------------------------------------------
-
-    /**
-     * Runtime errors that do not require immediate action but should typically
-     * be logged and monitored.
-     *
-     * @param string $message
-     *
-     * @return bool
-     */
-    public static function error( $message )
-    {
-        return static::write( Logger::ERROR, $message );
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Detailed debug information.
-     *
-     * @param string $message
-     *
-     * @return bool
-     */
-    public static function debug( $message )
-    {
-        return static::write( Logger::DEBUG, $message );
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Normal but significant events.
-     *
-     * @param string $message
-     *
-     * @return bool
-     */
-    public function notice( $message )
-    {
-        return static::write( Logger::NOTICE, $message );
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Exceptional occurrences that are not errors.
-     *
-     * Example: Use of deprecated APIs, poor use of an API, undesirable things
-     * that are not necessarily wrong.
-     *
-     * @param string $message
-     *
-     * @return bool
-     */
-    public function warning( $message )
-    {
-        return static::write( Logger::WARNING, $message );
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Action must be taken immediately.
-     *
-     * Example: Entire website down, database unavailable, etc. This should
-     * trigger the SMS alerts and wake you up.
-     *
-     * @param string $message
-     *
-     * @return bool
-     */
-    public function alert( $message )
-    {
-        return static::write( Logger::ALERT, $message );
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * System is unusable.
-     *
-     * @param string $message
-     *
-     * @return bool
-     */
-    public function emergency( $message )
-    {
-        return static::write( Logger::EMERGENCY, $message );
-    }
-
-    /**
-     * Critical conditions.
-     *
-     * Example: Application component unavailable, unexpected exception.
-     *
-     * @param string $message
-     *
-     * @return bool
-     */
-    public function critical( $message )
-    {
-        return static::write( Logger::CRITICAL, $message );
-    }
 }

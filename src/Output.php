@@ -38,7 +38,7 @@
 
 // ------------------------------------------------------------------------
 
-namespace O2System\O2Gears;
+namespace O2System\Gears;
 
 // ------------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ class Output
      * @param   mixed $vars any types of variables string|array|object|integer|boolean
      * @param   bool  $halt halt the PHP Process
      */
-    public static function code( $vars, $halt = TRUE )
+    public static function code( $vars, $halt = FALSE )
     {
         $vars = static::prepare_data( $vars );
         $vars = htmlentities( $vars );
@@ -82,8 +82,7 @@ class Output
 
         echo '<pre>' . $vars . '</pre>';
 
-        if( $halt === TRUE ) ;
-        exit( 0 );
+        if( $halt === TRUE ) die;
     }
 
     // ------------------------------------------------------------------------
@@ -120,6 +119,10 @@ class Output
         elseif( is_array( $vars ) || is_object( $vars ) )
         {
             $vars = print_r( $vars, TRUE );
+        }
+        elseif(is_int($vars) OR is_numeric($vars))
+        {
+            $vars = '(int) ' . $vars;
         }
 
         $vars = str_replace( '&nbsp;', '', $vars );

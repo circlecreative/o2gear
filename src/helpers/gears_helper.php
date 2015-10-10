@@ -59,14 +59,14 @@ if( ! function_exists( 'print_out' ) )
      *
      * Gear up developer to echo any type of variables to browser screen
      *
-     * @uses \O2System\O2Gears\Output::screen()
+     * @uses \O2System\Gears\Output::screen()
      *
      * @param mixed $vars string|array|object|integer|boolean
      * @param bool  $halt set FALSE to disabled halt output
      */
     function print_out( $vars, $halt = TRUE )
     {
-        O2System\O2Gears\Output::screen( $vars, $halt );
+        O2System\Gears\Output::screen( $vars, $halt );
     }
 }
 
@@ -80,7 +80,7 @@ if( ! function_exists( 'print_line' ) )
      * Gear up developer to print line by line any type of variables
      * to browser screen from anywhere in source code
      *
-     * @uses \O2System\O2Gears\Output::line()
+     * @uses \O2System\Gears\Output::line()
      *
      * @param mixed $line       string|array|object|integer|boolean
      * @param mixed $halt       set TRUE to halt output
@@ -88,7 +88,7 @@ if( ! function_exists( 'print_line' ) )
      */
     function print_line( $line = '', $halt = FALSE )
     {
-        O2System\O2Gears\Output::line( $line, $halt );
+        O2System\Gears\Output::line( $line, $halt );
     }
 }
 
@@ -101,14 +101,14 @@ if( ! function_exists( 'print_code' ) )
      *
      * Gear up developer to echo output with <pre> tag to browser screen
      *
-     * @uses \O2System\O2Gears\Output::code()
+     * @uses \O2System\Gears\Output::code()
      *
      * @param mixed $vars string|array|object|integer|boolean
      * @param mixed $halt set FALSE to disabled halt output
      */
-    function print_code( $vars, $halt = TRUE )
+    function print_code( $vars, $halt = FALSE )
     {
-        O2System\O2Gears\Output::code( $vars, $halt );
+        O2System\Gears\Output::code( $vars, $halt );
     }
 }
 
@@ -121,14 +121,14 @@ if( ! function_exists( 'print_dump' ) )
      *
      * Gear up developer to do var_dump output with <pre> tag to browser screen
      *
-     * @uses \O2System\O2Gears\Output::dump()
+     * @uses \O2System\Gears\Output::dump()
      *
      * @param mixed $vars string|array|object|integer|boolean
      * @param mixed $halt set FALSE to disabled halt output
      */
     function print_dump( $vars, $halt = TRUE )
     {
-        O2System\O2Gears\Output::dump( $vars, $halt );
+        O2System\Gears\Output::dump( $vars, $halt );
     }
 }
 
@@ -141,14 +141,14 @@ if( ! function_exists( 'console' ) )
      *
      * Gear up developer to do send output to browser console
      *
-     * @uses \O2System\O2Gears\Console::debug()
+     * @uses \O2System\Gears\Console::debug()
      *
      * @param string $title output title
      * @param mixed  $vars  string|array|object|integer|boolean
-     * @param int    $type  \O2System\O2Gears\Console type
+     * @param int    $type  \O2System\Gears\Console type
      */
-    function console( $title, $vars, $type = \O2System\O2Gears\Console::LOG )
+    function console( $title, $vars, $type = \O2System\Gears\Console::LOG )
     {
-        O2System\O2Gears\Console::debug( $type, $title, $vars );
+        O2System\Gears\Console::debug( $type, $title, $vars );
     }
 }
