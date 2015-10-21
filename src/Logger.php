@@ -38,7 +38,7 @@
 
 // ------------------------------------------------------------------------
 
-namespace O2System\O2Gears;
+namespace O2System\Gears;
 
 // ------------------------------------------------------------------------
 
@@ -79,7 +79,11 @@ class Logger
      *
      * @type array
      */
-    protected static $_config = array();
+    protected static $_config = array(
+        'path' => NULL,
+        'threshold' => Logger::ALL,
+        'date_format' => 'Y-m-d H:i:s'
+    );
 
     /**
      * List of logging levels
@@ -103,6 +107,30 @@ class Logger
     // --------------------------------------------------------------------
 
     /**
+     * Class Initialize
+     *
+     * @throws \Exception
+     */
+    public function __construct( array $config = array() )
+    {
+        static::$_config = array_merge(static::$_config, $config);
+
+        if( ! is_dir( static::$_config[ 'path' ] ) )
+        {
+            if( ! mkdir( static::$_config[ 'path' ], 0775, TRUE ) )
+            {
+                throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not a directory, doesn't exist or cannot be created." );
+            }
+        }
+        elseif( ! is_writable( static::$_config[ 'path' ] ) )
+        {
+            throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not writable by the PHP process." );
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Interesting events.
      *
      * @param string $message
@@ -112,115 +140,6 @@ class Logger
     public static function info( $message )
     {
         return static::write( Logger::INFO, $message );
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Write logs with an arbitrary level.
-     *
-     * @param mixed  $level
-     * @param string $message
-     *
-     * @return bool
-     */
-    public static function write( $level, $message )
-    {
-        if( empty ( static::$_config ) )
-        {
-            static::__reconstruct();
-        }
-
-        if( static::$_config[ 'threshold' ] == 0 )
-        {
-            return FALSE;
-        }
-
-        if( is_array( static::$_config[ 'threshold' ] ) )
-        {
-            if( ! in_array( $level, static::$_config[ 'threshold' ] ) )
-            {
-                return FALSE;
-            }
-        }
-        elseif( static::$_config[ 'threshold' ] !== Logger::ALL )
-        {
-            if( ! is_string( $level ) && $level > static::$_config[ 'threshold' ] )
-            {
-                return FALSE;
-            }
-        }
-
-        if( is_numeric( $level ) )
-        {
-            $level = static::$_levels[ $level ];
-        }
-        else
-        {
-            $level = strtoupper( $level );
-        }
-
-        $filepath = static::$_config[ 'path' ] . DIRECTORY_SEPARATOR . 'log-' . date( 'd-m-Y' ) . '.log';
-        $log = '';
-
-        if( ! file_exists( $filepath ) )
-        {
-            $newfile = TRUE;
-        }
-
-        if( ! $fp = @fopen( $filepath, 'ab' ) )
-        {
-            return FALSE;
-        }
-
-        $request = is_cli() ? 'CLI' : $_SERVER[ 'REQUEST_URI' ];
-        $log .= $request . ' -- ' . $level . ' - ' . date( 'r' ) . ' --> ' . $message . "\n";
-
-        flock( $fp, LOCK_EX );
-
-        for( $written = 0, $length = strlen( $log ); $written < $length; $written += $result )
-        {
-            if( ( $result = fwrite( $fp, substr( $log, $written ) ) ) === FALSE )
-            {
-                break;
-            }
-        }
-
-        flock( $fp, LOCK_UN );
-        fclose( $fp );
-
-        if( isset( $newfile ) && $newfile === TRUE )
-        {
-            chmod( $filepath, Config::permissions( 'file' ) );
-        }
-
-        return is_int( $result );
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * Class Initialize
-     *
-     * @throws \Exception
-     */
-    public static function __reconstruct()
-    {
-        static::$_config = Config::log();
-
-        static::$_config[ 'path' ] = Config::cache( 'path' ) . static::$_config[ 'path' ];
-
-        if( ! is_dir( static::$_config[ 'path' ] ) )
-        {
-            if( ! mkdir( static::$_config[ 'path' ], Config::permissions( 'folder' ), TRUE ) )
-            {
-                throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not a directory, doesn't exist or cannot be created." );
-            }
-        }
-        elseif( ! is_writable( static::$_config[ 'path' ] ) )
-        {
-            throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not writable by the PHP process." );
-        }
     }
 
     // --------------------------------------------------------------------
@@ -261,7 +180,7 @@ class Logger
      *
      * @return bool
      */
-    public function notice( $message )
+    public static function notice( $message )
     {
         return static::write( Logger::NOTICE, $message );
     }
@@ -278,7 +197,7 @@ class Logger
      *
      * @return bool
      */
-    public function warning( $message )
+    public static function warning( $message )
     {
         return static::write( Logger::WARNING, $message );
     }
@@ -295,7 +214,7 @@ class Logger
      *
      * @return bool
      */
-    public function alert( $message )
+    public static function alert( $message )
     {
         return static::write( Logger::ALERT, $message );
     }
@@ -309,7 +228,7 @@ class Logger
      *
      * @return bool
      */
-    public function emergency( $message )
+    public static function emergency( $message )
     {
         return static::write( Logger::EMERGENCY, $message );
     }
@@ -323,11 +242,85 @@ class Logger
      *
      * @return bool
      */
-    public function critical( $message )
+    public static function critical( $message )
     {
         return static::write( Logger::CRITICAL, $message );
     }
-}
 
-/* End of file Logger.php */
-/* Location: ./o2system/core/gears/Logger.php */
+    /**
+     * Write logs with an arbitrary level.
+     *
+     * @param mixed  $level
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function write( $level, $message )
+    {
+        if( static::$_config[ 'threshold' ] == 0 )
+        {
+            return FALSE;
+        }
+
+        if( is_array( static::$_config[ 'threshold' ] ) )
+        {
+            if( ! in_array( $level, static::$_config[ 'threshold' ] ) )
+            {
+                return FALSE;
+            }
+        }
+        elseif( static::$_config[ 'threshold' ] !== Logger::ALL )
+        {
+            if( ! is_string( $level ) && $level > static::$_config[ 'threshold' ] )
+            {
+                return FALSE;
+            }
+        }
+
+        if( is_numeric( $level ) )
+        {
+            $level = static::$_levels[ $level ];
+        }
+        else
+        {
+            $level = strtoupper( $level );
+        }
+
+        $filepath = static::$_config[ 'path' ] . 'log-' . date( 'd-m-Y' ) . '.log';
+        $log = '';
+
+        if( ! file_exists( $filepath ) )
+        {
+            $newfile = TRUE;
+        }
+
+        if( ! $fp = @fopen( $filepath, 'ab' ) )
+        {
+            return FALSE;
+        }
+
+        $log .= $level . ' - ' . date( 'r' ) . ' --> ' . $message . "\n";
+
+        flock( $fp, LOCK_EX );
+
+        for( $written = 0, $length = strlen( $log ); $written < $length; $written += $result )
+        {
+            if( ( $result = fwrite( $fp, substr( $log, $written ) ) ) === FALSE )
+            {
+                break;
+            }
+        }
+
+        flock( $fp, LOCK_UN );
+        fclose( $fp );
+
+        if( isset( $newfile ) && $newfile === TRUE )
+        {
+            chmod( $filepath, 0664 );
+        }
+
+        return is_int( $result );
+    }
+
+    // --------------------------------------------------------------------
+}
