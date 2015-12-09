@@ -92,7 +92,7 @@ class Debug
      *
      * @param   $call   String Call Method
      *
-     * @return          \O2System\Core\Gears\Tracer Object
+     * @return          Tracer Object
      */
     private static function __where_call( $call )
     {

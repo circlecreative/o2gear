@@ -186,15 +186,15 @@ namespace O2System\Gears;
          *
          * @access public
          *
-         * @param   bool $flush option for flushing chronology data
+         * @param   bool $reset option for resetting the chronology data
          *
          * @return  array
          */
-        public function chronology( $flush = TRUE )
+        public function chronology( $reset = TRUE )
         {
             $chronology = $this->_chronology;
 
-            if( $flush === TRUE )
+            if( $reset === TRUE )
             {
                 $this->_chronology = array();
             }

@@ -99,7 +99,7 @@ class Console
      */
     public static function debug( $type, $title, $vars )
     {
-        $vars = Printer::prepare_data( $vars );
+        $vars = Output::prepare_data( $vars );
 
         echo '<script type="text/javascript">' . PHP_EOL;
         switch( $type )

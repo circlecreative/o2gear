@@ -41,6 +41,7 @@
 namespace O2System\Gears;
 
 // ------------------------------------------------------------------------
+use O2System\Glob\Singleton\Abstracts;
 
 /**
  * Logging Class
@@ -55,6 +56,8 @@ namespace O2System\Gears;
  */
 class Logger
 {
+    use Abstracts;
+
     /**
      * Constants of Logger Types
      *
@@ -79,7 +82,7 @@ class Logger
      *
      * @type array
      */
-    protected static $_config = array(
+    protected $_config = array(
         'path' => NULL,
         'threshold' => Logger::ALL,
         'date_format' => 'Y-m-d H:i:s'
@@ -91,7 +94,7 @@ class Logger
      * @access protected
      * @type array
      */
-    protected static $_levels = array(
+    protected $_levels = array(
         0 => 'DISABLED',
         1 => 'DEBUG',
         2 => 'INFO',
@@ -113,19 +116,22 @@ class Logger
      */
     public function __construct( array $config = array() )
     {
-        static::$_config = array_merge(static::$_config, $config);
+        $this->_config = array_merge($this->_config, $config);
 
-        if( ! is_dir( static::$_config[ 'path' ] ) )
+        if( ! is_dir( $this->_config[ 'path' ] ) )
         {
-            if( ! mkdir( static::$_config[ 'path' ], 0775, TRUE ) )
+            if( ! mkdir( $this->_config[ 'path' ], 0775, TRUE ) )
             {
-                throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not a directory, doesn't exist or cannot be created." );
+                throw new \Exception( "Logger: Logs path '" . $this->_config[ 'path' ] . "' is not a directory, doesn't exist or cannot be created." );
             }
         }
-        elseif( ! is_writable( static::$_config[ 'path' ] ) )
+        elseif( ! is_writable( $this->_config[ 'path' ] ) )
         {
-            throw new \Exception( "Logger: Logs path '" . static::$_config[ 'path' ] . "' is not writable by the PHP process." );
+            throw new \Exception( "Logger: Logs path '" . $this->_config[ 'path' ] . "' is not writable by the PHP process." );
         }
+
+        // Make it global
+        $this->__reconstruct();
     }
 
     // --------------------------------------------------------------------
@@ -137,9 +143,9 @@ class Logger
      *
      * @return bool
      */
-    public static function info( $message )
+    public function info( $message )
     {
-        return static::write( Logger::INFO, $message );
+        return $this->write( Logger::INFO, $message );
     }
 
     // --------------------------------------------------------------------
@@ -152,9 +158,9 @@ class Logger
      *
      * @return bool
      */
-    public static function error( $message )
+    public function error( $message )
     {
-        return static::write( Logger::ERROR, $message );
+        return $this->write( Logger::ERROR, $message );
     }
 
     // --------------------------------------------------------------------
@@ -166,9 +172,9 @@ class Logger
      *
      * @return bool
      */
-    public static function debug( $message )
+    public function debug( $message )
     {
-        return static::write( Logger::DEBUG, $message );
+        return $this->write( Logger::DEBUG, $message );
     }
 
     // --------------------------------------------------------------------
@@ -180,9 +186,9 @@ class Logger
      *
      * @return bool
      */
-    public static function notice( $message )
+    public function notice( $message )
     {
-        return static::write( Logger::NOTICE, $message );
+        return $this->write( Logger::NOTICE, $message );
     }
 
     // --------------------------------------------------------------------
@@ -197,9 +203,9 @@ class Logger
      *
      * @return bool
      */
-    public static function warning( $message )
+    public function warning( $message )
     {
-        return static::write( Logger::WARNING, $message );
+        return $this->write( Logger::WARNING, $message );
     }
 
     // --------------------------------------------------------------------
@@ -214,9 +220,9 @@ class Logger
      *
      * @return bool
      */
-    public static function alert( $message )
+    public function alert( $message )
     {
-        return static::write( Logger::ALERT, $message );
+        return $this->write( Logger::ALERT, $message );
     }
 
     // --------------------------------------------------------------------
@@ -228,10 +234,12 @@ class Logger
      *
      * @return bool
      */
-    public static function emergency( $message )
+    public function emergency( $message )
     {
-        return static::write( Logger::EMERGENCY, $message );
+        return $this->write( Logger::EMERGENCY, $message );
     }
+
+    // --------------------------------------------------------------------
 
     /**
      * Critical conditions.
@@ -242,10 +250,12 @@ class Logger
      *
      * @return bool
      */
-    public static function critical( $message )
+    public function critical( $message )
     {
-        return static::write( Logger::CRITICAL, $message );
+        return $this->write( Logger::CRITICAL, $message );
     }
+
+    // --------------------------------------------------------------------
 
     /**
      * Write logs with an arbitrary level.
@@ -255,23 +265,23 @@ class Logger
      *
      * @return bool
      */
-    public static function write( $level, $message )
+    public function write( $level, $message )
     {
-        if( static::$_config[ 'threshold' ] == 0 )
+        if( $this->_config[ 'threshold' ] == 0 )
         {
             return FALSE;
         }
 
-        if( is_array( static::$_config[ 'threshold' ] ) )
+        if( is_array( $this->_config[ 'threshold' ] ) )
         {
-            if( ! in_array( $level, static::$_config[ 'threshold' ] ) )
+            if( ! in_array( $level, $this->_config[ 'threshold' ] ) )
             {
                 return FALSE;
             }
         }
-        elseif( static::$_config[ 'threshold' ] !== Logger::ALL )
+        elseif( $this->_config[ 'threshold' ] !== Logger::ALL )
         {
-            if( ! is_string( $level ) && $level > static::$_config[ 'threshold' ] )
+            if( ! is_string( $level ) && $level > $this->_config[ 'threshold' ] )
             {
                 return FALSE;
             }
@@ -279,14 +289,14 @@ class Logger
 
         if( is_numeric( $level ) )
         {
-            $level = static::$_levels[ $level ];
+            $level = $this->_levels[ $level ];
         }
         else
         {
             $level = strtoupper( $level );
         }
 
-        $filepath = static::$_config[ 'path' ] . 'log-' . date( 'd-m-Y' ) . '.log';
+        $filepath = $this->_config[ 'path' ] . 'log-' . date( 'd-m-Y' ) . '.log';
         $log = '';
 
         if( ! file_exists( $filepath ) )
@@ -314,13 +324,11 @@ class Logger
         flock( $fp, LOCK_UN );
         fclose( $fp );
 
-        if( isset( $newfile ) && $newfile === TRUE )
+        if( isset( $newfile ) AND $newfile === TRUE )
         {
             chmod( $filepath, 0664 );
         }
 
         return is_int( $result );
     }
-
-    // --------------------------------------------------------------------
 }

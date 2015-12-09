@@ -58,6 +58,8 @@ class Benchmark
 {
     protected $_start_time;
     protected $_start_memory;
+	protected $_start_cpu;
+	
     /**
      * List of all benchmark markers
      *
@@ -92,6 +94,13 @@ class Benchmark
          *-----------------------------------------------------------------------------
          */
         $this->_start_memory = memory_get_usage( TRUE );
+		
+		/*
+         *-----------------------------------------------------------------------------
+         * Define the cpu usage at the start of the application, used for profiling.
+         *-----------------------------------------------------------------------------
+         */
+		$this->_start_cpu = $this->_get_cpu_usage();
     }
 
     /**
@@ -104,9 +113,13 @@ class Benchmark
      *
      * @param    string $marker marker name
      */
-    public function start( $marker = 'total.execution' )
+    public function start( $marker = 'total_execution' )
     {
-        $this->_marker[ $marker ] = array( 'time' => $this->_start_time, 'memory' => $this->_start_memory );
+        $this->_marker[ $marker ] = array( 
+			'time' => $this->_start_time, 
+			'memory' => $this->_start_memory,
+			'cpu' => $this->_start_cpu
+		);
     }
     // ------------------------------------------------------------------------
 
@@ -124,14 +137,14 @@ class Benchmark
      *
      * @return    int   time of elapsed time
      */
-    public function elapsed_time( $marker = 'total.execution' )
+    public function elapsed_time( $marker = 'total_execution' )
     {
         if( empty( $this->_elapsed[ $marker ] ) )
         {
             $this->stop( $marker );
         }
-
-        return $this->_elapsed[ $marker ][ 'time' ];
+		
+		return $this->_elapsed[ $marker ][ 'time' ] . ' seconds';
     }
     // ------------------------------------------------------------------------
 
@@ -146,12 +159,13 @@ class Benchmark
      * @param   string  $marker   marker name
      * @param   int     $decimals time number format decimals
      */
-    public function stop( $marker = 'total.execution', $decimals = 4 )
+    public function stop( $marker = 'total_execution', $decimals = 4 )
     {
         $this->_elapsed[ $marker ] = array(
             'time'   => number_format( ( time() + microtime( TRUE ) ) - $this->_marker[ $marker ][ 'time' ],
                                        $decimals ),
             'memory' => ( memory_get_usage( TRUE ) - $this->_marker[ $marker ][ 'memory' ] ),
+			'cpu'    => $this->_get_cpu_usage()
         );
     }
     // ------------------------------------------------------------------------
@@ -168,7 +182,7 @@ class Benchmark
      *
      * @return  string  memory usage in MB
      */
-    public function memory_usage( $marker = 'total.execution' )
+    public function memory_usage( $marker = 'total_execution' )
     {
         if( empty( $this->_elapsed[ $marker ] ) )
         {
@@ -177,9 +191,19 @@ class Benchmark
 
         $memory = $this->_elapsed[ $marker ][ 'memory' ];
 
-        return round( $memory / 1024 / 1024, 2 ) . 'MB';
+        return round( $memory / 1024 / 1024, 2 ) . ' MB';
     }
     // ------------------------------------------------------------------------
+	
+	public function cpu_usage( $marker = 'total_execution' )
+	{
+		if( empty( $this->_elapsed[ $marker ] ) )
+        {
+            $this->stop( $marker );
+        }
+
+        return $this->_elapsed[ $marker ][ 'cpu' ];
+	}
 
     /**
      * Memory Peak Usage
@@ -190,9 +214,50 @@ class Benchmark
      */
     public function memory_peak_usage()
     {
-        return round( memory_get_peak_usage( TRUE ) / 1024 / 1024, 2 ) . 'MB';
+        return round( memory_get_peak_usage( TRUE ) / 1024 / 1024, 2 ) . ' MB';
     }
     // ------------------------------------------------------------------------
+	
+	/**
+     * CPU Usage
+     *
+     * @access	protected
+     *
+     * @return  int
+     */
+	protected function _get_cpu_usage() 
+	{
+        if (stristr(PHP_OS, 'win')) 
+		{
+			if( class_exists('COM', FALSE) )
+			{
+				$wmi = new \COM("Winmgmts://");
+				$server = $wmi->execquery("SELECT LoadPercentage FROM Win32_Processor");
+				
+				$cpu_num = 0;
+				$usage_total = 0;
+				
+				foreach($server as $cpu)
+				{
+					$cpu_num++;
+					$usage_total += $cpu->loadpercentage;
+				}
+				
+				$cpu_usage = round($usage_total/$cpu_num);
+			}
+            else
+			{
+				$cpu_usage = 0;
+			}
+        } 
+		else 
+		{
+            $sys_load = sys_getloadavg();
+            $cpu_usage = $sys_load[0];
+        }
+        
+        return (int) $cpu_usage . ' hertz';
+    }
 
     /**
      * Get Elapsed
@@ -202,8 +267,14 @@ class Benchmark
      *
      * @return  array   list of elapsed markers
      */
-    public function get_elapsed()
+    public function elapsed( $marker = 'total_execution' )
     {
-        return $this->_elapsed;
+		$elapsed = new \stdClass;
+		$elapsed->time = $this->elapsed_time( $marker );
+		$elapsed->memory = $this->memory_usage( $marker );
+		$elapsed->memory_peak = $this->memory_peak_usage();
+		$elapsed->cpu = $this->cpu_usage( $marker );
+		
+		return $elapsed;
     }
 }
