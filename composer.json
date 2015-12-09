@@ -2,7 +2,6 @@
 	"name"              : "o2system/o2gears",
 	"description"       : "PHP Developer Tools Library",
 	"license"           : "MIT",
-	"version"           : "1.0.0-beta",
 	"type"              : "php-libraries",
 	"keywords"          : [ "utilities", "php", "framework", "driver", "libraries" ],
 	"authors"           : [
