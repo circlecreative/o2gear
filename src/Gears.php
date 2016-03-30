@@ -1,16 +1,55 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: steevenz
- * Date: 1/11/2016
- * Time: 10:11 PM
+ * O2Gears
+ *
+ * An open source PHP Developer Utilities
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * Copyright (c) 2014, PT. Lingkar Kreasi (Circle Creative).
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS ||
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS || COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES || OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT || OTHERWISE, ARISING FROM,
+ * OUT OF || IN CONNECTION WITH THE SOFTWARE || THE USE || OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package        O2System
+ * @author         Circle Creative
+ * @copyright      Copyright (c) 2005 - 2014, PT. Lingkar Kreasi (Circle Creative).
+ * @license        http://circle-creative.com/products/o2system/license.html
+ * @license        http://opensource.org/licenses/MIT	MIT License
+ * @link           http://circle-creative.com
+ * @since          Version 2.0
+ * @filesource
  */
+
+// ------------------------------------------------------------------------
 
 namespace O2System
 {
 	use O2System\Gears\Console;
 	use O2System\Gears\Trace;
 
+	/**
+	 * Gears Class
+	 *
+	 * @package        O2System
+	 * @author         Circle Creative Dev Team
+	 * @link           http://o2system.center/wiki/#Gears
+	 */
 	class Gears
 	{
 		protected static $_lines = array();
@@ -179,9 +218,15 @@ namespace O2System
 
 namespace O2System\Gears
 {
-
 	use O2System\Glob\Interfaces\ExceptionInterface;
-
+	
+	/**
+	 * Gears Exception
+	 *
+	 * @package        O2System
+	 * @author         Circle Creative Dev Team
+	 * @link           http://o2system.center/wiki/#GearsException
+	 */
 	class Exception extends ExceptionInterface
 	{
 	}
@@ -193,9 +238,7 @@ namespace O2System\Gears
 	 *
 	 * This class is to gear up PHP Developer to send output to browser console
 	 *
-	 * @package        O2System
-	 * @subpackage     core/gears
-	 * @category       core class
+	 * @package        O2System\Gears
 	 * @author         Circle Creative Dev Team
 	 * @link           http://o2system.center/wiki/#GearsConsole
 	 */
@@ -374,9 +417,7 @@ namespace O2System\Gears
 	 * This class enables you to mark points and calculate the time difference
 	 * between them.  Memory consumption can also be displayed.
 	 *
-	 * @package        O2System
-	 * @subpackage     core/gears
-	 * @category       core class
+	 * @package        O2System\Gears
 	 * @author         Circle Creative Dev Team
 	 * @link           http://o2system.center/wiki/#GearsBenchmark
 	 */
@@ -629,9 +670,7 @@ namespace O2System\Gears
 	 *
 	 * This class is to gear up PHP Developer for manual debugging line by line
 	 *
-	 * @package        O2System
-	 * @subpackage     core/gears
-	 * @category       core class
+	 * @package        O2System\Gears
 	 * @author         Circle Creative Dev Team
 	 * @link           http://o2system.center/wiki/#GearsDebug
 	 *
@@ -770,11 +809,9 @@ namespace O2System\Gears
 	/**
 	 * Logging Class
 	 *
-	 * @package        O2System
-	 * @subpackage     core/gears
-	 * @category       core class
+	 * @package        O2System\Gears
 	 * @author         Circle Creative Dev Team
-	 * @link           http://o2system.center/wiki/#GearsLogging
+	 * @link           http://o2system.center/wiki/#GearsLogger
 	 *
 	 * @static         static class
 	 */
@@ -1055,15 +1092,13 @@ namespace O2System\Gears
 	// ------------------------------------------------------------------------
 
 	/**
-	 * Tracer Class
+	 * Trace Class
 	 *
 	 * This class is to gear up PHP Developer for Backtrace the PHP Process
 	 *
-	 * @package        O2System
-	 * @subpackage     core/gears
-	 * @category       core class
+	 * @package        O2System\Gears
 	 * @author         Circle Creative Dev Team
-	 * @link           http://o2system.center/wiki/#GearsTracer
+	 * @link           http://o2system.center/wiki/#GearsTrace
 	 */
 	class Trace
 	{
@@ -1223,11 +1258,9 @@ namespace O2System\Gears
 	/**
 	 * Chronology
 	 *
-	 * @package        O2System
-	 * @subpackage     core/gears
-	 * @category       core class
+	 * @package        O2System\Gears
 	 * @author         Circle Creative Dev Team
-	 * @link           http://o2system.center/wiki/#GearsDebug
+	 * @link           http://o2system.center/wiki/#GearsTraceChronology
 	 */
 	class TraceChronology
 	{
@@ -1241,13 +1274,27 @@ namespace O2System\Gears
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Gears Profiler
+	 *
+	 * @package        O2System\Gears
+	 * @author         Circle Creative Dev Team
+	 * @link           http://o2system.center/wiki/#GearsProfiler
+	 */
 	class Profiler
 	{
 
 	}
 
 	// ------------------------------------------------------------------------
-
+	
+	/**
+	 * Gears TestUnit
+	 *
+	 * @package        O2System\Gears
+	 * @author         Circle Creative Dev Team
+	 * @link           http://o2system.center/wiki/#GearsTestUnit
+	 */
 	class TestUnit
 	{
 
@@ -1255,6 +1302,13 @@ namespace O2System\Gears
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Gears Trackback
+	 *
+	 * @package        O2System\Gears
+	 * @author         Circle Creative Dev Team
+	 * @link           http://o2system.center/wiki/#GearsTrackback
+	 */
 	class Trackback
 	{
 
