@@ -4,6 +4,8 @@
         PHP Developer Tools - Debugger
     </title>
 
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" type="text/css">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
@@ -17,7 +19,7 @@
 
      <style type="text/css">
         body {
-            font-family: 'Roboto';
+            font-family: 'Ubuntu', Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
             font-size: 12px;
         }
 
@@ -104,6 +106,7 @@
         }
 
         pre {
+            font-family: 'Ubuntu', Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
             border-radius: 0;
             margin: 0;
         }
@@ -151,7 +154,7 @@
             </div>
 
             <div class="panel-body">
-                <pre class="brush: plain,js,css" id="code">
+                <pre class="brush: plain" id="code">
                     <?php echo trim($vars); ?>
                 </pre>
             </div>
@@ -168,20 +171,12 @@
 
                 <div class="panel-body">
                     <ol>
-                        <?php foreach( $tracer->chronology() as $chronology ): ?>
+                        <?php foreach( $trace->chronology() as $chronology ): ?>
                             <li><i class="fa fa-code"></i> <strong><?php echo $chronology->call; ?></strong>
-                                <?php if(! empty($chronology->args)): ?>
-                                <button class="toggle-args btn btn-xs btn-blue pull-right">Show Arguments</button>
-                                <?php endif; ?>
                                 <br><i class="fa fa-file-code-o"></i> <?php echo $chronology->file; ?><br><i
                                     class="fa fa-list-ol"></i> <?php echo $chronology->line; ?> / <i
                                     class="fa fa-clock-o"></i> <?php echo $chronology->time; ?> seconds /
                                 <i class="fa fa-dashboard"></i> <?php echo $chronology->memory; ?><br>
-                                <?php if(! empty($chronology->args)): ?>
-                                <pre class="brush: plain,js,css" rel="code-args">
-                                    <?php print_r($chronology->args); ?>
-                                </pre>
-                                <?php endif; ?>
                                 <hr>
                             </li>
                         <?php endforeach; ?>
